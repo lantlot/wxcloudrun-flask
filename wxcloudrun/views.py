@@ -13,4 +13,4 @@ def index():
     """
     params = request.get_json()
     print(params)
-    return requests.post("www.0x3f.top/chat","",params)
+    return requests.post("https://www.0x3f.top/chat",params)
