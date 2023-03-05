@@ -12,5 +12,4 @@ def index():
     :return: 返回index页面
     """
     params = request.get_json()
-    print(params)
-    return requests.post("https://www.0x3f.top/chat",params)
+    return requests.post(url="https://www.0x3f.top/chat", json=params)
