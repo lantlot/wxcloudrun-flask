@@ -13,5 +13,9 @@ def index():
     """
     params = request.get_json()
     res=requests.post(url="https://www.0x3f.top/chat", json=params).text
-    print(res)
+    return  res
+@app.route('/adv',methods=["POST"])
+def adv():
+    params = request.get_json()
+    res=requests.post(url="https://www.0x3f.top/adv", json=params).text
     return  res
