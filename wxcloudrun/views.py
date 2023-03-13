@@ -41,11 +41,9 @@ def pull_message():
     """
     :return: 返回index页面
     """
-    params = request.get_json()
-    message_id = uuid.uuid4().hex
-    thread = threading.Thread(target=get_chat_message, args=(params,message_id))
-    thread.start()
-    return  make_succ_response(uuid)
+    params = request.args.get('uuid')
+
+    return  make_succ_response(message_dict[params])
 
 
 def get_chat_message(params, message_id):
