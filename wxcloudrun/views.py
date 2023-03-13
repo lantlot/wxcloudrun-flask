@@ -67,8 +67,8 @@ def create_adv_message():
     return make_succ_response(message_id)
 
 
-def get_adv_message(params):
+def get_adv_message(params,message_id):
     res = requests.post(url="https://www.0x3f.top/adv", json=params).text
-    return res
+    message_dict[message_id] = res
 
 
