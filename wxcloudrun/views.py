@@ -34,7 +34,7 @@ def create_message():
     message_id = uuid.uuid4().hex
     thread = threading.Thread(target=get_chat_message, args=(params,message_id))
     thread.start()
-    return  make_succ_response(uuid)
+    return  make_succ_response(message_id)
 
 @app.route('/pullMessage',methods=["GET"])
 def pull_message():
@@ -64,7 +64,7 @@ def create_adv_message():
     message_id = uuid.uuid4().hex
     thread = threading.Thread(target=get_adv_message, args=(params, message_id))
     thread.start()
-    return make_succ_response(uuid)
+    return make_succ_response(message_id)
 
 
 def get_adv_message(params):
