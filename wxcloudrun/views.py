@@ -1,3 +1,4 @@
+import json
 import threading
 import uuid
 from datetime import datetime
@@ -65,7 +66,7 @@ def add_app(app_uuid):
     return  make_succ_empty_response()
 @app.route('/app',methods=["GET"])
 def list_app():
-    return  make_succ_response(list_application())
+    return  make_succ_response(json.dumps(list_application()))
 
 @app.route('/use_app/<app_uuid>/',methods=["POST"])
 def use_app(app_uuid):
