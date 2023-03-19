@@ -78,7 +78,9 @@ def query_application_by_uuid(uuid):
 
 def list_application():
     try:
-        return Application.query.with_entities(Application.name,Application.description,Application.uuid).all()
+        applist = Application.query.with_entities(Application.name, Application.description, Application.uuid).all()
+        logger.info(applist)
+        return applist
     except OperationalError as e:
         logger.info("insert_counter errorMsg= {} ".format(e))
 
