@@ -16,10 +16,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://{}:{}@{}/flask_demo'.format(con
 
 # 初始化DB操作对象
 db = SQLAlchemy(app)
-db.create_all()
-
 # 加载控制器
 from wxcloudrun import views
 
 # 加载配置
 app.config.from_object('config')
+with app.app_context():
+    db.create_all()
