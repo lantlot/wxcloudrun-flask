@@ -63,7 +63,7 @@ def add_app(app_uuid):
     params.uuid=app_uuid
     insert_application(params)
     return  make_succ_empty_response()
-@app.route('/app/',methods=["GET"])
+@app.route('/app',methods=["GET"])
 def list_app():
     list_application()
     return  make_succ_empty_response()
