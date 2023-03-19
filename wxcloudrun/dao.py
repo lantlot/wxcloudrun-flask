@@ -3,7 +3,7 @@ import logging
 from sqlalchemy.exc import OperationalError
 
 from wxcloudrun import db
-from wxcloudrun.model import Counters
+from wxcloudrun.model import Counters ,Application
 
 # 初始化日志
 logger = logging.getLogger('log')
@@ -57,6 +57,48 @@ def update_counterbyid(counter):
     try:
         counter = query_counterbyid(counter.id)
         if counter is None:
+            return
+        db.session.flush()
+        db.session.commit()
+    except OperationalError as e:
+        logger.info("update_counterbyid errorMsg= {} ".format(e))
+
+def query_application_by_uuid(uuid):
+    """
+    根据UUID查询Application实体
+    :param UUID: Application的UUID
+    :return: Application实体
+    """
+    try:
+        return Application.query.filter(Application.uuid == uuid).first()
+    except OperationalError as e:
+        logger.info("query_counterbyid errorMsg= {} ".format(e))
+        return None
+
+
+def list_application():
+    try:
+        return db.session.query(Application.name,Application.description).all()
+    except OperationalError as e:
+        logger.info("insert_counter errorMsg= {} ".format(e))
+
+
+def insert_application(application):
+    try:
+        db.session.add(application)
+        db.session.commit()
+    except OperationalError as e:
+        logger.info("insert_counter errorMsg= {} ".format(e))
+
+
+def update_application_by_uuid(application):
+    """
+    根据ID更新Application的值
+    :param Application实体
+    """
+    try:
+        application = query_application_by_uuid(application.uuid)
+        if application is None:
             return
         db.session.flush()
         db.session.commit()

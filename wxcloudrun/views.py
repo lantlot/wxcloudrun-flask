@@ -5,8 +5,8 @@ from datetime import datetime
 import requests
 from flask import render_template, request
 from run import app
-from wxcloudrun.dao import delete_counterbyid, query_counterbyid, insert_counter, update_counterbyid
-from wxcloudrun.model import Counters
+from wxcloudrun.dao import update_application_by_uuid, query_application_by_uuid, insert_application, list_application
+from wxcloudrun.model import Application
 from wxcloudrun.response import make_succ_empty_response, make_succ_response, make_err_response
 class MessageDict(dict):
     def __missing__(self, key):
@@ -56,6 +56,33 @@ def adv():
     params = request.get_json()
     res=requests.post(url="https://www.0x3f.top/adv", json=params).text
     return  res
+
+@app.route('/app/<app_uuid>/',methods=["POST"])
+def add_app(app_uuid):
+    params = request.get_json()
+    params.uuid=app_uuid
+    insert_application(params)
+    return  make_succ_empty_response()
+@app.route('/app/',methods=["GET"])
+def list_app():
+    list_application()
+    return  make_succ_empty_response()
+
+@app.route('/use_app/<app_uuid>/',methods=["POST"])
+def use_app(app_uuid):
+    application=query_application_by_uuid(app_uuid)
+    params = request.get_json()
+    message_id = uuid.uuid4().hex
+    prompt= [{"role": "user", "content": application.prompt + params.data}]
+    thread = threading.Thread(target=get_adv_message, args=(prompt, message_id))
+    thread.start()
+    return make_succ_response(message_id)
+
+
+
+# @app.route('/app/<app_uuid>/',methods=["GET"])
+# def get_app(app_uuid):
+#     return  query_application_by_uuid(app_uuid)
 
 
 @app.route('/createAdv',methods=["POST"])
