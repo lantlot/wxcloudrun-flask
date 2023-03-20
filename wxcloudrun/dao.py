@@ -1,6 +1,7 @@
 import logging
 
 from sqlalchemy.exc import OperationalError
+from sqlalchemy.orm import class_mapper
 
 from wxcloudrun import db
 from wxcloudrun.model import Counters ,Application
@@ -70,7 +71,9 @@ def query_application_by_uuid(uuid):
     :return: Application实体
     """
     try:
-        return Application.query.filter(Application.uuid == uuid).first()
+        app = Application.query.filter(Application.uuid == uuid).first()
+        app_dict = dict((col.name, getattr(app, col.name)) for col in class_mapper(Application).mapped_table.c)
+        return app_dict
     except OperationalError as e:
         logger.info("query_counterbyid errorMsg= {} ".format(e))
         return None
@@ -78,11 +81,12 @@ def query_application_by_uuid(uuid):
 
 def list_application():
     try:
-        res = Application.query.with_entities(Application.name, Application.description, Application.uuid).all()
+        res = Application.query.with_entities(Application.name, Application.description, Application.uuid,Application.eg).all()
         serialized_result = [{
             'name': row[0],
             'description': row[1],
-            'uuid': str(row[2])
+            'uuid': str(row[2]),
+            'eg':row[3]
         } for row in res]
 
         return serialized_result
