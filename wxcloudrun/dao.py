@@ -78,9 +78,14 @@ def query_application_by_uuid(uuid):
 
 def list_application():
     try:
-        applist = Application.query.with_entities(Application.name, Application.description, Application.uuid).all()
-        print(applist)
-        return applist
+        res = Application.query.with_entities(Application.name, Application.description, Application.uuid).all()
+        serialized_result = [{
+            'name': row[0],
+            'description': row[1],
+            'uuid': str(row[2])
+        } for row in res]
+
+        return serialized_result
     except OperationalError as e:
         logger.info("insert_counter errorMsg= {} ".format(e))
 
