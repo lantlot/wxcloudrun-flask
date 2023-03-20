@@ -66,7 +66,8 @@ def add_app(app_uuid):
     return  make_succ_empty_response()
 @app.route('/app',methods=["GET"])
 def list_app():
-    return  json.dumps(list_application())
+    applications = list_application()
+    return  json.dumps(applications)
 
 @app.route('/use_app/<app_uuid>/',methods=["POST"])
 def use_app(app_uuid):
