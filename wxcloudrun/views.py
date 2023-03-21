@@ -1,5 +1,6 @@
 import json
 import logging
+import sys
 import threading
 import uuid
 from datetime import datetime
@@ -73,6 +74,7 @@ def list_app():
     applications = list_application()
     print(applications)
     logger.info(applications)
+    sys.stdout.flush()
     return  json.dumps(applications)
 
 @app.route('/use_app/<app_uuid>',methods=["POST"])
@@ -83,6 +85,7 @@ def use_app(app_uuid):
     logger.info("query_counterbyid errorMsg= {} ".format(app_uuid))
     application=query_application_by_uuid(app_uuid)
     logger.info(application)
+    sys.stdout.flush()
     params = request.get_json()
     message_id = uuid.uuid4().hex
     prompt= [{"role": "user", "content": application.prompt + params.data}]
