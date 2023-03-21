@@ -6,7 +6,8 @@ from datetime import datetime
 import requests
 from flask import render_template, request
 from run import app
-from wxcloudrun.dao import update_application_by_uuid, query_application_by_uuid, insert_application, list_application
+from wxcloudrun.dao import update_application_by_uuid, query_application_by_uuid, insert_application, list_application, \
+    logger
 from wxcloudrun.model import Application
 from wxcloudrun.response import make_succ_empty_response, make_succ_response, make_err_response
 class MessageDict(dict):
@@ -71,9 +72,9 @@ def list_app():
 
 @app.route('/use_app/<app_uuid>',methods=["POST"])
 def use_app(app_uuid):
-    print(app_uuid)
+    logger.info("query_counterbyid errorMsg= {} ".format(app_uuid))
     application=query_application_by_uuid(app_uuid)
-    print(application)
+    logger.info(application)
     params = request.get_json()
     message_id = uuid.uuid4().hex
     prompt= [{"role": "user", "content": application.prompt + params.data}]
