@@ -71,6 +71,8 @@ def add_app(app_uuid):
 @app.route('/app',methods=["GET"])
 def list_app():
     applications = list_application()
+    print(applications)
+    logger.info(applications)
     return  json.dumps(applications)
 
 @app.route('/use_app/<app_uuid>',methods=["POST"])
