@@ -82,7 +82,7 @@ def use_app(app_uuid):
     sys.stdout.flush()
     params = request.get_json()
     message_id = uuid.uuid4().hex
-    prompt= [{"role": "user", "content": application.prompt + params.data}]
+    prompt= [{"role": "user", "content": application['prompt'] + params.data}]
     thread = threading.Thread(target=get_adv_message, args=(prompt, message_id))
     thread.start()
     return make_succ_response(message_id)
