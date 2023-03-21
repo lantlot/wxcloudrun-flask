@@ -26,5 +26,5 @@ class Application(db.Model):
     prompt = db.Column(db.VARCHAR, default="")
     eg = db.Column(db.VARCHAR, default="")
     user_name = db.Column(db.VARCHAR, default="Alex")
-    created_at = db.Column('createdAt', db.TIMESTAMP, nullable=False, default=datetime.now())
-    updated_at = db.Column('updatedAt', db.TIMESTAMP, nullable=False, default=datetime.now())
+    created_at = db.Column('created_at', db.TIMESTAMP, nullable=False, default=datetime.now())
+    updated_at = db.Column('updated_at', db.TIMESTAMP, nullable=False, default=datetime.now())
