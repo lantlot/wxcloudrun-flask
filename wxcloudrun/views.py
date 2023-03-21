@@ -83,7 +83,7 @@ def use_app(app_uuid):
     params = request.get_json()
     message_id = uuid.uuid4().hex
     prompt= [{"role": "user", "content": application['prompt'] + params["data"]}]
-    thread = threading.Thread(target=get_adv_message, args=(prompt, message_id))
+    thread = threading.Thread(target=get_chat_message, args=(prompt, message_id))
     thread.start()
     return make_succ_response(message_id)
 
