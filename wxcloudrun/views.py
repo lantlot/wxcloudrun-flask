@@ -12,8 +12,9 @@ from wxcloudrun.dao import update_application_by_uuid, query_application_by_uuid
 from wxcloudrun.model import Application
 from wxcloudrun.response import make_succ_empty_response, make_succ_response, make_err_response
 
-logger = logging.getLogger('view')
-logger.setLevel(logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
+
+logging.info('Starting...')
 class MessageDict(dict):
     def __missing__(self, key):
         return ""
@@ -72,19 +73,12 @@ def add_app(app_uuid):
 @app.route('/app',methods=["GET"])
 def list_app():
     applications = list_application()
-    print(applications)
-    logger.info(applications)
-    sys.stdout.flush()
     return  json.dumps(applications)
 
 @app.route('/use_app/<app_uuid>',methods=["POST"])
 def use_app(app_uuid):
-    print("hit")
-    print(app_uuid)
-    print(logging)
-    logger.info("query_counterbyid errorMsg= {} ".format(app_uuid))
     application=query_application_by_uuid(app_uuid)
-    logger.info(application)
+    print(application)
     sys.stdout.flush()
     params = request.get_json()
     message_id = uuid.uuid4().hex
