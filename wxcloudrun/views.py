@@ -58,7 +58,7 @@ def adv():
     res=requests.post(url="https://www.0x3f.top/adv", json=params).text
     return  res
 
-@app.route('/app/<app_uuid>/',methods=["POST"])
+@app.route('/app/<app_uuid>',methods=["POST"])
 def add_app(app_uuid):
     params = request.get_json()
     params.uuid=app_uuid
@@ -69,9 +69,11 @@ def list_app():
     applications = list_application()
     return  json.dumps(applications)
 
-@app.route('/use_app/<app_uuid>/',methods=["POST"])
+@app.route('/use_app/<app_uuid>',methods=["POST"])
 def use_app(app_uuid):
+    print(app_uuid)
     application=query_application_by_uuid(app_uuid)
+    print(application)
     params = request.get_json()
     message_id = uuid.uuid4().hex
     prompt= [{"role": "user", "content": application.prompt + params.data}]
