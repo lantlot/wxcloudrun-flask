@@ -42,7 +42,9 @@ def login():
     """
     params = request.get_json()
     res = requests.get(url="https://api.weixin.qq.com/sns/jscode2session?js_code="+params["code"]+"&grant_type=authorization_code", json=params).json()
-    return res["openid"]
+    print(res)
+    sys.stdout.flush()
+    return res
 @app.route('/createMessage',methods=["POST"])
 def create_message():
     params = request.get_json()
