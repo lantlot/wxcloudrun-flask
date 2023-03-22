@@ -54,7 +54,7 @@ def login():
             "code"] + "&grant_type=authorization_code", json=params).json()
     print(res)
     sys.stdout.flush()
-    return res
+    return res["openid"]
 
 
 @app.route('/createMessage', methods=["POST"])
