@@ -91,7 +91,7 @@ def adv():
 @app.route('/app/<app_uuid>', methods=["POST"])
 def add_app(app_uuid):
     params = request.get_json()
-    entity=Application
+    entity=Application()
     entity.uuid=app_uuid
     entity.name=params["name"]
     entity.description=params["description"]
