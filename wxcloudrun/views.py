@@ -7,6 +7,8 @@ from datetime import datetime
 
 import requests
 from flask import render_template, request
+
+from config import appid, secret
 from run import app
 from wxcloudrun.dao import update_application_by_uuid, query_application_by_uuid, insert_application, list_application
 from wxcloudrun.model import Application
@@ -15,6 +17,8 @@ from wxcloudrun.response import make_succ_empty_response, make_succ_response, ma
 logging.basicConfig(level=logging.INFO)
 
 logging.info('Starting...')
+
+
 class MessageDict(dict):
     def __missing__(self, key):
         return ""
@@ -25,9 +29,11 @@ class MessageDict(dict):
     def get(self, k, d=None):
         return super(MessageDict, self).get(k, d)
 
-message_dict=MessageDict()
 
-@app.route('/chat',methods=["POST"])
+message_dict = MessageDict()
+
+
+@app.route('/chat', methods=["POST"])
 def index():
     """
     :return: 返回index页面
@@ -35,68 +41,78 @@ def index():
     params = request.get_json()
     res = requests.post(url="https://www.0x3f.top/chat", json=params).text
     return res
-@app.route('/login',methods=["POST"])
+
+
+@app.route('/login', methods=["POST"])
 def login():
     """
     :return: 返回index页面
     """
     params = request.get_json()
-    res = requests.get(url="https://api.weixin.qq.com/sns/jscode2session?js_code="+params["code"]+"&grant_type=authorization_code", json=params).json()
+    res = requests.get(
+        url="https://api.weixin.qq.com/sns/jscode2session?appid=" + appid + "&secret=" + secret + "&js_code=" + params[
+            "code"] + "&grant_type=authorization_code", json=params).json()
     print(res)
     sys.stdout.flush()
     return res
-@app.route('/createMessage',methods=["POST"])
+
+
+@app.route('/createMessage', methods=["POST"])
 def create_message():
     params = request.get_json()
     message_id = uuid.uuid4().hex
-    thread = threading.Thread(target=get_chat_message, args=(params,message_id))
+    thread = threading.Thread(target=get_chat_message, args=(params, message_id))
     thread.start()
-    return  make_succ_response(message_id)
+    return make_succ_response(message_id)
 
-@app.route('/pullMessage',methods=["GET"])
+
+@app.route('/pullMessage', methods=["GET"])
 def pull_message():
     """
     :return: 返回index页面
     """
     params = request.args.get('uuid')
 
-    return  make_succ_response(message_dict[params])
+    return make_succ_response(message_dict[params])
 
 
 def get_chat_message(params, message_id):
     res = requests.post(url="https://www.0x3f.top/chat", json=params).text
-    message_dict[message_id]=res
+    message_dict[message_id] = res
 
 
-@app.route('/adv',methods=["POST"])
+@app.route('/adv', methods=["POST"])
 def adv():
     params = request.get_json()
-    res=requests.post(url="https://www.0x3f.top/adv", json=params).text
-    return  res
+    res = requests.post(url="https://www.0x3f.top/adv", json=params).text
+    return res
 
-@app.route('/app/<app_uuid>',methods=["POST"])
+
+@app.route('/app/<app_uuid>', methods=["POST"])
 def add_app(app_uuid):
     params = request.get_json()
-    params.uuid=app_uuid
+    params.uuid = app_uuid
     insert_application(params)
-    return  make_succ_empty_response()
-@app.route('/app',methods=["GET"])
+    return make_succ_empty_response()
+
+
+@app.route('/app', methods=["GET"])
 def list_app():
     applications = list_application()
-    return  json.dumps(applications)
+    return json.dumps(applications)
 
-@app.route('/use_app/<app_uuid>',methods=["POST"])
+
+@app.route('/use_app/<app_uuid>', methods=["POST"])
 def use_app(app_uuid):
-    application=query_application_by_uuid(app_uuid)
+    application = query_application_by_uuid(app_uuid)
     print(application)
     sys.stdout.flush()
     params = request.get_json()
     message_id = uuid.uuid4().hex
-    prompt= [{"role": "user", "content": application['prompt'] + params["data"]}]
+    prompt = [{"role": "user", "content": application['prompt'] + params["data"]}]
     thread = threading.Thread(target=get_chat_message, args=(prompt, message_id))
     thread.start()
     return make_succ_response(message_id)
-
 
 
 # @app.route('/app/<app_uuid>/',methods=["GET"])
@@ -104,7 +120,7 @@ def use_app(app_uuid):
 #     return  query_application_by_uuid(app_uuid)
 
 
-@app.route('/createAdv',methods=["POST"])
+@app.route('/createAdv', methods=["POST"])
 def create_adv_message():
     params = request.get_json()
     message_id = uuid.uuid4().hex
@@ -112,8 +128,7 @@ def create_adv_message():
     thread.start()
     return make_succ_response(message_id)
 
-def get_adv_message(params,message_id):
+
+def get_adv_message(params, message_id):
     res = requests.post(url="https://www.0x3f.top/adv", json=params).text
     message_dict[message_id] = res
-
-
