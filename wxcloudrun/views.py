@@ -35,6 +35,14 @@ def index():
     params = request.get_json()
     res = requests.post(url="https://www.0x3f.top/chat", json=params).text
     return res
+@app.route('/login',methods=["POST"])
+def index():
+    """
+    :return: 返回index页面
+    """
+    params = request.get_json()
+    res = requests.get(url="https://api.weixin.qq.com/sns/jscode2session?js_code="+params.data+"&grant_type=authorization_code", json=params).json()
+    return res.openid
 @app.route('/createMessage',methods=["POST"])
 def create_message():
     params = request.get_json()
@@ -101,7 +109,6 @@ def create_adv_message():
     thread = threading.Thread(target=get_adv_message, args=(params, message_id))
     thread.start()
     return make_succ_response(message_id)
-
 
 def get_adv_message(params,message_id):
     res = requests.post(url="https://www.0x3f.top/adv", json=params).text
