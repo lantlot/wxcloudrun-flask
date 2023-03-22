@@ -41,8 +41,8 @@ def login():
     :return: 返回index页面
     """
     params = request.get_json()
-    res = requests.get(url="https://api.weixin.qq.com/sns/jscode2session?js_code="+params.data+"&grant_type=authorization_code", json=params).json()
-    return res.openid
+    res = requests.get(url="https://api.weixin.qq.com/sns/jscode2session?js_code="+params["code"]+"&grant_type=authorization_code", json=params).json()
+    return res["openid"]
 @app.route('/createMessage',methods=["POST"])
 def create_message():
     params = request.get_json()
