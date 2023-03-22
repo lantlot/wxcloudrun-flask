@@ -36,7 +36,7 @@ def index():
     res = requests.post(url="https://www.0x3f.top/chat", json=params).text
     return res
 @app.route('/login',methods=["POST"])
-def index():
+def login():
     """
     :return: 返回index页面
     """
