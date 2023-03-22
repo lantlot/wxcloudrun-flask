@@ -91,7 +91,7 @@ def adv():
 @app.route('/app/<app_uuid>', methods=["POST"])
 def add_app(app_uuid):
     params = request.get_json()
-    params.uuid = app_uuid
+    params["uuid"] = app_uuid
     insert_application(params)
     return make_succ_empty_response()
 
