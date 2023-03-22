@@ -91,8 +91,14 @@ def adv():
 @app.route('/app/<app_uuid>', methods=["POST"])
 def add_app(app_uuid):
     params = request.get_json()
-    params["uuid"] = app_uuid
-    insert_application(params)
+    entity=Application
+    entity.uuid=app_uuid
+    entity.name=params["name"]
+    entity.description=params["description"]
+    entity.eg=params["eg"]
+    entity.prompt=params["prompt"]
+    entity.open_id=params["open_id"]
+    insert_application(entity)
     return make_succ_empty_response()
 
 
